@@ -79,6 +79,15 @@ async function executeUIChange(cmd)
     .then(() => showMessage("green", "success!"))
     .catch((error) => showMessage("red", error));
   }
+  else if(splittedCmd[0] == "font-f" || splittedCmd[0] == "font-family")
+  {
+    inputBoxEl.style.fontFamily = splittedCmd[1];
+    showMessage("green", "success!");
+  }
+  else if(splittedCmd[0] == "font-s" || splittedCmd[0] == "font-size")
+  {
+    inputBoxEl.style.fontSize = splittedCmd[1] + 'pt';
+  }
   else 
   {
     showMessage("red", "unknown command!");

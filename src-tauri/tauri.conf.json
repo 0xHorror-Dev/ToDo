@@ -60,8 +60,8 @@
     "windows": [
       {
         "fullscreen": false,
-        "height": 600,
-        "resizable": true,
+        "height": 300,
+        "resizable": false,
         "title": "todo",
         "width": 800
       }

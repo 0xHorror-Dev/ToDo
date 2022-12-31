@@ -28,29 +28,49 @@ h1
   text-align: center;
 }
 
-input 
-{
-  width: calc(100% - 2px);
+/*
+
+width: calc(100% - 2px);
   height: calc(90% - 5px);
+  left: 50%;
+*/
+
+.it-container
+{
+  display:grid;
+  justify-content: center;
+}
+
+.res-msg
+{
+  font-family: inherit;
+  font-size: 25pt;
+
+  text-align: center;
+}
+
+input
+{
+  display:inline-block;
+
+  width: 86vw;
+  height: 80px;
 
   font: inherit;
   font-size: 36pt;
-  border: transparent;
-
+  
   outline: 0 !important;
-
-  border-color: var(--primary-color);
-  background-color: var(--backgound-color);
+  
+  border-radius: 25px;
+  border-color: var(--backgound-color);
+  background-color: var(--primary-color);
 }
 
 input:active :hover :focus
 {
   outline: inherit;
 
-
-
   outline-offset: 0;
-  border: 0pc;
 }
 
 
