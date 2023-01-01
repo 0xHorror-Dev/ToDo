@@ -5,15 +5,64 @@
 
 const TODO_APPLICATION_SAVE_FOLDER:&'static str ="TODO_SV_FOLDER"; 
 
-use std::io::{Write};
+use std::io::{Write, Read};
 use std::{env, path::PathBuf};
-use std::fs::File;
+use std::fs::{File};
 use std::sync::{Arc, Mutex};
 
 use std::fs::OpenOptions;
 
 use tauri::State;
 use home::home_dir;
+
+#[tauri::command]
+async fn clear_file(_handle: tauri::AppHandle, state: State<'_,ApplicationInfomation>, file_name: String) -> Result<(), String> 
+{
+    let mut clear_path:PathBuf = PathBuf::new();
+    clear_path.push(&state.save_dir);
+    clear_path.push(&file_name);
+
+    match OpenOptions::new()
+    .read(true)
+    .write(true)
+    .create(true)
+    .truncate(true) // added here
+    .open(clear_path.as_path())
+    {
+        Ok(_) => Ok(()),
+        Err(err) =>
+        {
+            Err(format!("failed to clear file: '{}'\n error:'{}'", clear_path.display(), err.to_string()).to_owned())
+        }
+    }
+}
+
+#[tauri::command]
+async fn view_file(_handle: tauri::AppHandle, state: State<'_,ApplicationInfomation>, file_name: String) -> Result<String, String> 
+{
+    let mut read_path:PathBuf = PathBuf::new();
+    read_path.push(&state.save_dir);
+    read_path.push(&file_name);
+
+    let mut file = match File::open(read_path.as_path())
+    {
+        Ok(f) => f,
+        Err(err)=>
+        {
+            return Err(format!("failed to open file: '{}'\n error:'{}'",read_path.display(), err.to_string()).to_owned());
+        }
+    };
+
+    let mut buf = String::new();
+    match file.read_to_string(&mut buf)
+    {
+        Ok(_) =>
+        {
+            Ok(buf)
+        }
+        Err(err) => Err(format!("failed to read file: '{}'\n error:'{}'",read_path.display(), err.to_string()).to_owned())
+    }
+}
 
 #[tauri::command]
 async fn change_file(_handle: tauri::AppHandle, state: State<'_,ApplicationInfomation>, file_name: String) -> Result<(), String> 
@@ -158,7 +207,7 @@ fn main() {
 
     tauri::Builder::default()
         .manage(inf)
-        .invoke_handler(tauri::generate_handler![remove_file, get_selected_file_name, write_into_file, change_file])
+        .invoke_handler(tauri::generate_handler![clear_file, view_file, remove_file, get_selected_file_name, write_into_file, change_file])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
