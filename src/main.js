@@ -23,7 +23,7 @@ async function textInputListener(e)
     else
     {
       await invoke("write_into_file", { todoStr: inputBoxEl.value })
-      .then(() => showMessage("green", "success!"))
+      .then(() => showMessage("green", "center", "success!"))
       .catch((error) => showMessage("red", error));
     }
   }
